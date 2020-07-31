@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.springboot.dao.DepartmenMapper">
+    <resultMap id="BaseResultMap" type="com.example.springboot.pojo.Departmen">
+        <id column="Did" property="did" jdbcType="INTEGER"/>
+        <result column="Dname" property="dname" jdbcType="VARCHAR"/>
+    </resultMap>
+    <cache eviction="LRU" flushInterval="10000" readOnly="true" size="1024"/>
+    <sql id="Base_Column_List">
+    Did, Dname
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from departmen
+        where Did = #{did,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from departmen
+    where Did = #{did,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.example.springboot.pojo.Departmen">
+    insert into departmen (Did, Dname)
+    values (#{did,jdbcType=INTEGER}, #{dname,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.example.springboot.pojo.Departmen">
+        insert into departmen
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="did != null">
+                Did,
+            </if>
+            <if test="dname != null">
+                Dname,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="did != null">
+                #{did,jdbcType=INTEGER},
+            </if>
+            <if test="dname != null">
+                #{dname,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.springboot.pojo.Departmen">
+        update departmen
+        <set>
+            <if test="dname != null">
+                Dname = #{dname,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where Did = #{did,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.springboot.pojo.Departmen">
+    update departmen
+    set Dname = #{dname,jdbcType=VARCHAR}
+    where Did = #{did,jdbcType=INTEGER}
+  </update>
+    <select id="list" resultMap="BaseResultMap" useCache="true">
+    select * from departmen
+  </select>
+</mapper>

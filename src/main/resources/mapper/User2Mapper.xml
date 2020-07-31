@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.springboot.dao.User2Mapper">
+    <resultMap id="BaseResultMap" type="com.example.springboot.pojo.User2">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="age" property="age" jdbcType="INTEGER"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="time" property="time" jdbcType="TIMESTAMP"/>
+        <result column="ifdelete" property="ifdelete" jdbcType="INTEGER"/>
+        <result column="Did" property="did" jdbcType="INTEGER"/>
+        <association property="departmen" javaType="com.example.springboot.pojo.Departmen">
+            <id column="Did" property="did" jdbcType="INTEGER"/>
+            <result column="Dname" property="dname" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+    <!--二级缓存-->
+    <cache eviction="LRU" flushInterval="100000" readOnly="true" size="1024"/>
+
+    <sql id="Base_Column_List">
+    id, name, age, sex, time, ifdelete, Did
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" useCache="true">
+        select
+        <include refid="Base_Column_List"/>
+        from user2
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user2
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.example.springboot.pojo.User2">
+    insert into user2 (id, name, age, 
+      sex, time, ifdelete, 
+      Did)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, 
+      #{sex,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, #{ifdelete,jdbcType=INTEGER}, 
+      #{did,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective" parameterType="com.example.springboot.pojo.User2">
+        insert into user2
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="age != null">
+                age,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="time != null">
+                time,
+            </if>
+            <if test="ifdelete != null">
+                ifdelete,
+            </if>
+            <if test="did != null">
+                Did,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=INTEGER},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="time != null">
+                #{time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ifdelete != null">
+                #{ifdelete,jdbcType=INTEGER},
+            </if>
+            <if test="did != null">
+                #{did,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.springboot.pojo.User2">
+        update user2
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                age = #{age,jdbcType=INTEGER},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="time != null">
+                time = #{time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ifdelete != null">
+                ifdelete = #{ifdelete,jdbcType=INTEGER},
+            </if>
+            <if test="did != null">
+                Did = #{did,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.springboot.pojo.User2">
+    update user2
+    set name = #{name,jdbcType=VARCHAR},
+      age = #{age,jdbcType=INTEGER},
+      sex = #{sex,jdbcType=VARCHAR},
+      time = #{time,jdbcType=TIMESTAMP},
+      ifdelete = #{ifdelete,jdbcType=INTEGER},
+      Did = #{did,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="selectALL" resultMap="BaseResultMap" parameterType="com.example.springboot.pojo.User2">
+        SELECT
+        departmen.Dname,
+        user2.id,
+        user2.`name`,
+        user2.age,
+        user2.sex,
+        user2.time,
+        user2.ifdelete,
+        user2.Did,
+        departmen.Did
+        FROM
+        user2
+        INNER JOIN departmen ON user2.Did = departmen.Did where ifdelete=0
+        <trim prefix=" and" suffixOverrides=" and" suffix=" ">
+            <if test="sex!=null and sex!=''">
+                sex=#{sex,jdbcType=VARCHAR} and
+            </if>
+            <if test="id!=0 and id!=null">
+                id= #{id,jdbcType=INTEGER} and
+            </if>
+            <if test="name!=null and name!=''">
+                name = #{name,jdbcType=VARCHAR} and
+            </if>
+            <if test="did!=null and did!=0">
+                user2.Did = #{did,jdbcType=INTEGER} and
+            </if>
+        </trim>
+    </select>
+    <select id="selectALL2" resultMap="BaseResultMap" parameterType="com.example.springboot.pojo.User2">
+        SELECT
+        departmen.Dname,
+        user2.id,
+        user2.`name`,
+        user2.age,
+        user2.sex,
+        user2.time,
+        user2.ifdelete,
+        user2.Did,
+        departmen.Did
+        FROM
+        user2
+        INNER JOIN departmen ON user2.Did = departmen.Did where ifdelete=1
+        <trim prefix=" and" suffixOverrides=" and" suffix=" ">
+            <if test="sex!=null and sex!=''">
+                sex=#{sex,jdbcType=VARCHAR} and
+            </if>
+            <if test="id!=0 and id!=null">
+                id= #{id,jdbcType=INTEGER} and
+            </if>
+            <if test="name!=null and name!=''">
+                name = #{name,jdbcType=VARCHAR} and
+            </if>
+            <if test="did!=null and did!=0">
+                user2.Did = #{did,jdbcType=INTEGER} and
+            </if>
+        </trim>
+    </select>
+</mapper>

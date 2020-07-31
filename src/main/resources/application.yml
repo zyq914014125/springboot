@@ -1,0 +1,23 @@
+#默认使用配置
+spring:
+  #数据库
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mybits?characterEncoding=utf-8
+    userName: root
+    password: 123456789
+  #html
+  mvc:
+    view:
+      prefix: /
+      suffix: .html
+  thymeleaf:
+    prefix: classpath:/templates/
+
+#公共配置与profiles选择无关
+mybatis:
+  typeAliasesPackage: com.example.springboot.dao
+  mapperLocations: classpath:mapper/*.xml
+  config-location: classpath:mybatis/mybatis.xml
+
+
